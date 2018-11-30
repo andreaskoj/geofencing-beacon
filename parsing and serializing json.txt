@@ -1,0 +1,41 @@
+const size_t bufferSize = JSON_ARRAY_SIZE(2) + JSON_OBJECT_SIZE(2) + 2*JSON_OBJECT_SIZE(3) + 120;
+DynamicJsonBuffer jsonBuffer(bufferSize);
+
+const char* json = "{\"name\":\"beacon1\",\"verticles\":[{\"number\":1,\"longtitude\":\"6.88\",\"langtitude\":\"5.77\"},{\"number\":1,\"longtitude\":\"9.88\",\"langtitude\":\"2.77\"}]}";
+
+JsonObject& root = jsonBuffer.parseObject(json);
+
+const char* name = root["name"]; // "beacon1"
+
+JsonObject& verticles0 = root["verticles"][0];
+int verticles0_number = verticles0["number"]; // 1
+const char* verticles0_longtitude = verticles0["longtitude"]; // "6.88"
+const char* verticles0_langtitude = verticles0["langtitude"]; // "5.77"
+
+JsonObject& verticles1 = root["verticles"][1];
+int verticles1_number = verticles1["number"]; // 1
+const char* verticles1_longtitude = verticles1["longtitude"]; // "9.88"
+const char* verticles1_langtitude = verticles1["langtitude"]; // "2.77"
+
+
+//SERIALIZING
+
+const size_t bufferSize = JSON_ARRAY_SIZE(2) + JSON_OBJECT_SIZE(2) + 2*JSON_OBJECT_SIZE(3);
+DynamicJsonBuffer jsonBuffer(bufferSize);
+
+JsonObject& root = jsonBuffer.createObject();
+root["name"] = "beacon1";
+
+JsonArray& verticles = root.createNestedArray("verticles");
+
+JsonObject& verticles_0 = verticles.createNestedObject();
+verticles_0["number"] = 1;
+verticles_0["longtitude"] = "6.88";
+verticles_0["langtitude"] = "5.77";
+
+JsonObject& verticles_1 = verticles.createNestedObject();
+verticles_1["number"] = 1;
+verticles_1["longtitude"] = "9.88";
+verticles_1["langtitude"] = "2.77";
+
+root.printTo(Serial);
