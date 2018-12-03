@@ -25,7 +25,8 @@ RF24 radio(7, 8); // CE, CSN
 VerticleEEPROM * verticlesArray;
 
 //broadcast address
-const byte address[6] = "00001";
+const byte writeAddress[6] = "00001";
+const byte readAddress[6] = "00002";
 const int eepromVerticleSize = 16;
 int deviceID = 0;
 //storing qty of verticies 
@@ -46,25 +47,51 @@ void setup() {
     EEPROM_readAnything(sizeof(qtyVerticles)+i*eepromVerticleSize, verticlesArray[i]);
   }
 
-  // starting transimission on nRF24L01
-  radio.begin();
-  radio.openWritingPipe(address);
-  radio.setPALevel(RF24_PA_MIN);
-  radio.stopListening();
-  
-}
-void loop() {
-  int msgNumber = counter % qtyVerticles ;
+  // starting sending messages on nRF24L01
 
-  //creating a msg
-  String msg = String(deviceID)+","+String(1)+","+String(qtyVerticles)+","+String(verticlesArray[msgNumber].verticleNumber)+
-  ","+String(verticlesArray[msgNumber].x)+","+String(verticlesArray[msgNumber].y);       
+  radio.begin();
+  radio.setPALevel(RF24_PA_MIN);
+  radio.openWritingPipe(writeAddress);
+  radio.openReadingPipe(0, readAddress);
+  radio.setRetries(3,5);
+  radio.startListening();
+}
+
+
+
+void loop() {
+
+   receiveData();
+    delay(250);
+    sendData();
+    delay(250);
   
-  //converting String to char Array
-  msg.toCharArray(charBuffer, 32); 
-     
-  radio.write(&charBuffer, sizeof(charBuffer));
-  //counter of the loop
-  counter++;
-  delay(1000);
+//  int msgNumber = counter % qtyVerticles ;
+//
+//  String msg = String(deviceID)+","+String(1)+","+String(qtyVerticles)+","+String(verticlesArray[msgNumber].verticleNumber)+
+//  ","+String(verticlesArray[msgNumber].x)+","+String(verticlesArray[msgNumber].y);       
+//
+//  msg.toCharArray(charBuffer, 32); 
+//     
+//  radio.write(&charBuffer, sizeof(charBuffer));
+//
+//  counter++;
+
+}
+
+void sendData() {
+        char test[20] = "Get from uno";
+        radio.stopListening();
+            radio.write( &test , sizeof(test) );
+            //Serial.println(rslt);
+        radio.startListening();
+
+    }
+void receiveData() {
+
+      if (radio.available()) {
+        char text[32] = "";
+        radio.read(&text, sizeof(text));
+        Serial.println(text);
+      }
 }
