@@ -34,7 +34,10 @@
 
 
     void sendData() {
-        char test[20] = "Get from nano";
+      // add = 0 , update = 1 , delete = 2
+      //beaconID, crudID, x,x
+      
+        char test[20] = "0,0,9.5369,9.7107";
         radio.stopListening();
             radio.write( &test , sizeof(test) );
             Serial.println("**************SENT");
