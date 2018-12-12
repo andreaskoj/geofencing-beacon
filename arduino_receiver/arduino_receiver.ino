@@ -9,16 +9,16 @@
 RF24 radio(7, 8); // CE, CSN
 
 struct VerticeMessage {
-  unsigned int beaconId;
-  unsigned int cVertice;
-  unsigned int tVertices;
+  uint8_t beaconId;
+  uint8_t cVertice;
+  uint8_t tVertices;
   float x;
   float y;
 };
 
 struct crudMsg {
-  unsigned int beaconId;
-  unsigned int crudId;
+  uint8_t beaconId;
+  uint8_t crudId;
   float x;
   float y;
 };
@@ -27,7 +27,7 @@ struct crudMsg {
 VerticeMessage testMsg;
 
 struct VerticeInEEPROM {
-  unsigned int verticeNumber;
+  uint8_t verticeNumber;
   float x;
   float y;
 };
@@ -35,14 +35,14 @@ struct VerticeInEEPROM {
 crudMsg msg;
 
 VerticeInEEPROM v1;
-int addressEeprom = 0;
-byte value;
+uint8_t addressEeprom = 0;
+uint8_t value;
 //address to listen
 const byte readAddress[6] = "00002";
 
 // address to send
 const byte writeAddress[6] = "00001";
-int counter = 0;
+uint8_t counter = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -56,6 +56,10 @@ void setup() {
 }
 
 void loop() {
+
+//    while(Serial.available() == 0);
+//  int val = Serial.read();
+//  Serial.println(val);
   receiveData();
   delay(250);
   sendData();
@@ -75,11 +79,13 @@ void sendData() {
   radio.stopListening();
 
   msg.beaconId = 1;
-  msg.crudId = 1;
-  msg.x = 2.66666;
-  msg.y = 3.77777;
-
+  msg.crudId = 0;
+  msg.x = 0.542354;
+  msg.y = 1.445264;
+  //Serial.println(counter);
+  //if (counter == 25)
   radio.write( &msg , sizeof(msg));
+  
   //        if (counter == 0) radio.write( &test1 , sizeof(test1) );
   //        else if (counter == 1) radio.write( &test2 , sizeof(test2) );
   //        else if (counter == 2) radio.write( &test3 , sizeof(test3) );
@@ -87,7 +93,7 @@ void sendData() {
   //        else radio.write( &test5 , sizeof(test5) );
 
   radio.startListening();
-  //counter ++;
+  counter ++;
 }
 void receiveData() {
 

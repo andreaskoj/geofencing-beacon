@@ -1,30 +1,30 @@
-struct VerticeInEEPROM {
-  unsigned int verticeNumber;
+struct verticeInEEPROM {
+  uint8_t verticeNumber;
   float x;
   float y;
 };
 
-struct VerticeMessage {
-  unsigned int beaconId;
-  unsigned int cVertice;
-  unsigned int tVertices;
+struct verticeMessage {
+  uint8_t beaconId;
+  uint8_t cVertice;
+  uint8_t tVertices;
   float x;
   float y;
 };
 
-struct crudMsg{
-  unsigned int beaconId;
-  unsigned int crudId;
+struct crudMsg {
+  uint8_t beaconId;
+  uint8_t crudId;
   float x;
-  float y;  
+  float y;
 };
 
 
 
 // message to send struct
-VerticeMessage msg;
+verticeMessage msg;
 
-VerticeMessage& msgToTrans(VerticeInEEPROM vertice, unsigned int beaconId, unsigned int qtyVertices) {
+verticeMessage& msgToTrans(verticeInEEPROM& vertice, const uint8_t& beaconId, const uint8_t& qtyVertices) {
 
   msg.beaconId = beaconId;
   msg.cVertice = vertice.verticeNumber;
@@ -35,11 +35,35 @@ VerticeMessage& msgToTrans(VerticeInEEPROM vertice, unsigned int beaconId, unsig
   return msg;
 }
 
+
+// check memory to find the same vertice
+
+int checkIfexists(crudMsg& crudMsg, verticeInEEPROM verticesArrayEEPROM[], const uint8_t& qtyVertices) {
+
+  // traverse the array and if find the same pair X & Y return true else false
+  for ( int i = 0; i < qtyVertices; i++) {
+
+    if (crudMsg.x == verticesArrayEEPROM[i].x && crudMsg.y == verticesArrayEEPROM[i].y) {
+      Serial.println( "Found this verticle in memory on position -> " + (String)(i + 1) );
+      return i;
+    }
+  }
+  return -1;
+}
+
+void beaconCommunication() {
+//  Serial.println("Welcome to Beacon's serial menu.");
+//  Serial.println("Choose on of the follwoing options:");
+//  while (Serial.available() == 0);
+//  int val = Serial.read();
+//  Serial.println(val);
+}
+
 void fillEEPROM () {
 
-  unsigned int qtyVertices = 4;
+  uint8_t qtyVertices = 4;
 
-  VerticeInEEPROM v1, v2, v3, v4;
+  verticeInEEPROM v1, v2, v3, v4;
 
   v1.verticeNumber = 1;
   v1.x = 5.453454;
@@ -57,11 +81,15 @@ void fillEEPROM () {
   v4.x = 3.434343;
   v4.y = 9.423424;
 
-  Serial.println(sizeof(v1));
+  Serial.println(" TEST - size of verticle -> "  + (String)sizeof(v1));
+  Serial.println(" TEST2 - size of first element in EEPROM ->  "  + (String)sizeof(qtyVertices));
 
   EEPROM_writeAnything(0 , qtyVertices );
-  EEPROM_writeAnything(2 , v1);
-  EEPROM_writeAnything(2 + 10, v2);
-  EEPROM_writeAnything(2 + 10 * 2, v3);
-  EEPROM_writeAnything(2 + 10 * 3, v4);
+  EEPROM_writeAnything(1 , v1);
+  EEPROM_writeAnything(1 + sizeof(v1), v2);
+  EEPROM_writeAnything(1 + sizeof(v1) * 2, v3);
+  EEPROM_writeAnything(1 + sizeof(v1) * 3, v4);
+  
+  Serial.println("Added initial set of vertices");
+  
 }
