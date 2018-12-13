@@ -57,9 +57,9 @@ void setup() {
 
 void loop() {
 
-//    while(Serial.available() == 0);
-//  int val = Serial.read();
-//  Serial.println(val);
+  //    while(Serial.available() == 0);
+  //  int val = Serial.read();
+  //  Serial.println(val);
   receiveData();
   delay(250);
   sendData();
@@ -80,12 +80,17 @@ void sendData() {
 
   msg.beaconId = 1;
   msg.crudId = 0;
-  msg.x = 0.542354;
-  msg.y = 1.445264;
+
+  msg.x = 3.434343;
+  msg.y = 9.423424;
+
+  //  msg.x = 0.542354;
+  //  msg.y = 1.445264;
+
   //Serial.println(counter);
   //if (counter == 25)
-  radio.write( &msg , sizeof(msg));
-  
+ radio.write( &msg , sizeof(msg));
+
   //        if (counter == 0) radio.write( &test1 , sizeof(test1) );
   //        else if (counter == 1) radio.write( &test2 , sizeof(test2) );
   //        else if (counter == 2) radio.write( &test3 , sizeof(test3) );

@@ -64,13 +64,13 @@ void setup() {
   radio.openReadingPipe(0, readAddress);
   radio.startListening();
 
-  //fillEEPROM();
+  // this function is set eeprom memory to 4 default vertices
+  //fillEEPROMtoReset();
 
   beaconMonolog();
 }
 
 void loop() {
-
   sendData();
   delay(250);
   receiveData();
@@ -85,7 +85,6 @@ void sendData() {
 
 void receiveData() {
   if (radio.available()) {
-
     if (performingAnalyze == false) {
       radio.read(&crudMsg, sizeof(crudMsg));
       //Serial.println(crudMsg.x);
@@ -115,6 +114,7 @@ boolean analyzeReceivedData() {
 
     //check memory
     if (qtyVertices <= maxVertices) {
+      Serial.println("Caught add msg!");
 
       //add vertice to the array
       verticesArrayEEPROM[qtyVertices].verticeNumber = qtyVertices + 1;
@@ -139,6 +139,7 @@ boolean analyzeReceivedData() {
   }
 
   else if (crudMsg.crudId == 0) {
+    Serial.println("Caught delete msg!");
 
     //get position from array
     verticePos = checkIfexists(crudMsg, verticesArrayEEPROM , qtyVertices);
@@ -146,12 +147,30 @@ boolean analyzeReceivedData() {
     if (verticePos >= 0) {
       Serial.println("Delete a verticle -> " + (String)verticePos);
 
+      // move this vecticle to the last postion of the array
+      verticesArrayEEPROM[verticePos].verticeNumber = qtyVertices + 1;
 
-      //qtyVertices--;
+      // sort elements in array
+      qsort(verticesArrayEEPROM, qtyVertices, sizeof(verticeInEEPROM), compareQuickSort);
+
+      // set new numbers to the vertices
+      for (uint8_t y = 0; y < qtyVertices; y++) {
+        if (verticesArrayEEPROM[y].verticeNumber - (y + 1) != 0) {
+          verticesArrayEEPROM[y].verticeNumber = (y + 1);
+        }
+      }
+      //loose the reference to the last verticle
+      qtyVertices--;
+
+      // rewrite EEPROM 
+      refreshEEPROM(qtyVertices, verticesArrayEEPROM );
+      
+      //debug
+
     }
-    else Serial.println("Vertice not found");
+    else Serial.println("No such a vertice in memory");
   }
-  return true;
+  return false;
 }
 
 void beaconMonolog() {
@@ -162,6 +181,7 @@ void beaconMonolog() {
   Serial.print(qtyVertices);
   Serial.print("/");
   Serial.println(maxVertices - 1);
+  Serial.println();
   for (int i = 0; i < qtyVertices; i++)
     Serial.println("Vertice #" + (String)(i + 1) + " -> X=" + (String)verticesArrayEEPROM[i].x + " Y=" + (String)verticesArrayEEPROM[i].y);
   Serial.println("----------------------------");

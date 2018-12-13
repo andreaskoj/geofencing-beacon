@@ -19,8 +19,6 @@ struct crudMsg {
   float y;
 };
 
-
-
 // message to send struct
 verticeMessage msg;
 
@@ -51,15 +49,34 @@ int checkIfexists(crudMsg& crudMsg, verticeInEEPROM verticesArrayEEPROM[], const
   return -1;
 }
 
-void beaconCommunication() {
-//  Serial.println("Welcome to Beacon's serial menu.");
-//  Serial.println("Choose on of the follwoing options:");
-//  while (Serial.available() == 0);
-//  int val = Serial.read();
-//  Serial.println(val);
+int compareQuickSort (const void * a, const void * b) {
+
+  verticeInEEPROM *verticeInEEPROM1 = (verticeInEEPROM *)a;
+  verticeInEEPROM *verticeInEEPROM2 = (verticeInEEPROM *)b;
+
+  return ( verticeInEEPROM1 -> verticeNumber - verticeInEEPROM2 -> verticeNumber );
 }
 
-void fillEEPROM () {
+void beaconCommunication() {
+  //  Serial.println("Welcome to Beacon's serial menu.");
+  //  Serial.println("Choose on of the follwoing options:");
+  //  while (Serial.available() == 0);
+  //  int val = Serial.read();
+  //  Serial.println(val);
+}
+
+void refreshEEPROM(uint8_t& qtyVertices, verticeInEEPROM verticesArrayEEPROM[]) {
+
+  // write number of vertices to EEPROM
+  EEPROM_writeAnything(0 , qtyVertices );
+
+  for (int i = 0; i < qtyVertices; i++) {
+    EEPROM_writeAnything(sizeof(qtyVertices) + sizeof(verticeInEEPROM) * i , verticesArrayEEPROM[i] );
+  }
+}
+
+
+void fillEEPROMtoReset () {
 
   uint8_t qtyVertices = 4;
 
@@ -89,7 +106,7 @@ void fillEEPROM () {
   EEPROM_writeAnything(1 + sizeof(v1), v2);
   EEPROM_writeAnything(1 + sizeof(v1) * 2, v3);
   EEPROM_writeAnything(1 + sizeof(v1) * 3, v4);
-  
+
   Serial.println("Added initial set of vertices");
-  
+
 }
