@@ -12,7 +12,7 @@
 RF24 radio(7, 8); // CE, CSN
 
 //constants
-const uint8_t beaconID = 1;
+const uint8_t beaconID = 2;
 const uint8_t maxVertices = 11; // MAX 10 vertices
 const byte writeAddress[6] = "00002";
 const byte readAddress[6] = "00001";

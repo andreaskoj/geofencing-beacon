@@ -103,22 +103,35 @@ void fillEEPROMtoReset () {
 
   verticeInEEPROM v1, v2, v3, v4;
 
-  // noth-west corner
+  //  Location 1
+  //  Vertex 1; x = 11.979063, y = 57.687562
+  //  Vertex 2; x = 11.978741, y = 57.687497
+  //  Vertex 3; x = 11.978890, y = 57.687345
+  //  Vertex 4; x = 11.979234, y = 57.687410
+
+  //  Location 2
+  //  Vertex 1; x = 11.980462, y = 57.688159
+  //  Vertex 2; x = 11.980573, y = 57.688039
+  //  Vertex 3; x = 11.981056, y = 57.688167
+  //  Vertex 4; x = 11.980950, y = 57.688278
+
+
+  // Location 1 
   v1.verticeNumber = 1;
-  v1.x = 57.688049;
-  v1.y = 11.977811;
+  v1.x = 57.687562;
+  v1.y = 11.979063;
 
   v2.verticeNumber = 2;
-  v2.x = 57.687628;
-  v2.y = 11.979864;
+  v2.x = 57.687497;
+  v2.y = 11.978741;
 
   v3.verticeNumber = 3;
-  v3.x = 57.687433;
-  v3.y = 11.978536;
+  v3.x = 57.687345;
+  v3.y = 11.978890;
 
   v4.verticeNumber = 4;
-  v4.x = 57.688055;
-  v4.y = 11.977900;
+  v4.x = 57.687410;
+  v4.y = 11.979234;
 
   Serial.println(" TEST - size of verticle -> "  + (String)sizeof(v1));
   Serial.println(" TEST2 - size of first element in EEPROM ->  "  + (String)sizeof(qtyVertices));

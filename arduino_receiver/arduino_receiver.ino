@@ -1,7 +1,7 @@
 // RECEIVER CODE - NANO
 
 #include <nRF24L01.h>
-#include <ArduinoJson.h>
+
 #include <RF24.h>
 #include <EEPROM.h>
 #include <SPI.h>
@@ -17,8 +17,6 @@ struct VerticeMessage {
 };
 
 struct crudMsg {
-  uint8_t beaconId;
-  uint8_t crudId;
   float x;
   float y;
 };
@@ -78,18 +76,20 @@ void sendData() {
   char test5[20] = "1,0,8.5369,9.7107";
   radio.stopListening();
 
-  msg.beaconId = 1;
-  msg.crudId = 0;
-
-  msg.x = 3.434343;
-  msg.y = 9.423424;
+  msg.x = 87.688049;
+  msg.y = 21.977811;
 
   //  msg.x = 0.542354;
   //  msg.y = 1.445264;
 
   //Serial.println(counter);
   //if (counter == 25)
- radio.write( &msg , sizeof(msg));
+    //delay(5000);
+
+ //radio.write( &msg , sizeof(msg));
+
+    //delay(10000);
+
 
   //        if (counter == 0) radio.write( &test1 , sizeof(test1) );
   //        else if (counter == 1) radio.write( &test2 , sizeof(test2) );
